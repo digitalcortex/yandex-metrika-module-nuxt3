@@ -52,7 +52,6 @@ const module = defineNuxtModule({
       head.script.push({
         src: options.metrikaUrl,
         defer: true,
-        async: true,
         tagPosition: "head"
       });
     }
