@@ -86,7 +86,6 @@ export default defineNuxtModule<YandexMetrikaModuleOptions>({
       head.script.push({
         src: options.metrikaUrl,
         defer: true,
-        async: true,
         tagPosition: 'head'
       })
     }
