@@ -46,15 +46,13 @@ const module = defineNuxtModule({
       }
     });
     const head = nuxt.options.app.head;
-    if (!head.link) {
-      head.link = [];
-    }
+    head.script = head.script || [];
     logger.debug(`Yandex Metrika script URL: ${options.metrikaUrl}`);
     if (!isDev) {
-      head.link.push({
-        href: options.metrikaUrl,
-        rel: "preload",
-        as: "script"
+      head.script.push({
+        src: options.metrikaUrl,
+        defer: true,
+        tagPosition: "head"
       });
     }
     const runtimeDir = fileURLToPath(new URL("./runtime", import.meta.url));
