@@ -94,10 +94,6 @@ export default defineNuxtModule<YandexMetrikaModuleOptions>({
         scriptObj.type = 'text/partytown'
       }
       head.script.push(scriptObj)
-
-      if (options.partytown) {
-        window.dispatchEvent(new CustomEvent('ptupdate'))
-      } // trigger partytown rescan
     }
 
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))

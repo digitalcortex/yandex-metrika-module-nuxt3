@@ -3,7 +3,7 @@ import { useRouter } from '#imports'
 import options from '#build/yandex-metrika.options.mjs'
 
 export default defineNuxtPlugin(async ({ _ }) => {
-  const { id, isDev, consoleLog, metrikaUrl, ...metrikaOptions } = await options()
+  const { id, isDev, consoleLog, metrikaUrl, partytown, ...metrikaOptions } = await options()
 
   let ready = false
   // const basePath = (useRuntimeConfig().app.baseURL || '/').replace(/\/$/, '')
@@ -31,6 +31,10 @@ export default defineNuxtPlugin(async ({ _ }) => {
       if (consoleLog) {
         console.log(`Yandex Metrika initialized in ${isDev ? 'development' : 'production'} mode. ID=${id}. Options: ${JSON.stringify(metrikaOptions)}`)
       }
+
+      if (partytown && window) {
+        window.dispatchEvent(new CustomEvent('ptupdate'))
+      } // trigger partytown rescan
     }
 
     useRouter().afterEach((to, from) => {
