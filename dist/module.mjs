@@ -26,7 +26,8 @@ const module = defineNuxtModule({
     type: 0,
     webvisor: false,
     triggerEvent: false,
-    consoleLog: true
+    consoleLog: true,
+    partytown: false
   },
   setup(options, nuxt) {
     const isDev = nuxt.options.dev && process.env.NODE_ENV !== "production";
@@ -49,11 +50,18 @@ const module = defineNuxtModule({
     head.script = head.script || [];
     logger.debug(`Yandex Metrika script URL: ${options.metrikaUrl}`);
     if (!isDev) {
-      head.script.push({
+      const scriptObj = {
         src: options.metrikaUrl,
-        defer: true,
+        async: true,
         tagPosition: "head"
-      });
+      };
+      if (options.partytown) {
+        scriptObj.type = "text/partytown";
+      }
+      head.script.push(scriptObj);
+      if (options.partytown) {
+        window.dispatchEvent(new CustomEvent("ptupdate"));
+      }
     }
     const runtimeDir = fileURLToPath(new URL("./runtime", import.meta.url));
     addPlugin({
