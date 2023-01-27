@@ -22,7 +22,8 @@ export interface YandexMetrikaModuleOptions extends ModuleOptions {
   type?: number,
   webvisor?: boolean,
   triggerEvent?: boolean,
-  consoleLog?: boolean
+  consoleLog?: boolean,
+  partytown?: boolean
 }
 
 const logger = useLogger('nuxt:yandex-metrika')
@@ -49,7 +50,8 @@ export default defineNuxtModule<YandexMetrikaModuleOptions>({
     type: 0,
     webvisor: false,
     triggerEvent: false,
-    consoleLog: true
+    consoleLog: true,
+    partytown: false
   },
   setup (options: YandexMetrikaModuleOptions, nuxt) {
     const isDev = (nuxt.options.dev && process.env.NODE_ENV !== 'production')
@@ -83,11 +85,19 @@ export default defineNuxtModule<YandexMetrikaModuleOptions>({
 
     logger.debug(`Yandex Metrika script URL: ${options.metrikaUrl}`)
     if (!isDev) {
-      head.script.push({
+      const scriptObj: Parameters<typeof head.script.push>[number] = {
         src: options.metrikaUrl,
-        defer: true,
+        async: true,
         tagPosition: 'head'
-      })
+      }
+      if (options.partytown) {
+        scriptObj.type = 'text/partytown'
+      }
+      head.script.push(scriptObj)
+
+      if (options.partytown) {
+        window.dispatchEvent(new CustomEvent('ptupdate'))
+      } // trigger partytown rescan
     }
 
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
